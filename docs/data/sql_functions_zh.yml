@@ -340,6 +340,12 @@ string:
     description: |
       返回从 STRING 中删除右边空格的字符串。
       例如 `'This is a test String. '.rtrim()` 返回 `'This is a test String.'`。
+  - sql: BTRIM(str[, trimStr])
+    table: str.btrim([trimStr])
+    description: |
+      从 str 的左边和右边删除 trimStr 中的字符。trimStr 默认设置为空格。      
+      str <CHAR | VARCHAR>, trimStr <CHAR | VARCHAR>
+      返回一个 STRING 格式的裁剪后的 str。如果任何参数为 `NULL`，则返回 `NULL`。
   - sql: REPEAT(string, int)
     table: STRING.repeat(INT)
     description: |
@@ -369,6 +375,13 @@ string:
       返回一个新字符串，它用 STRING3（非重叠）替换 STRING1 中所有出现的 STRING2。
       例如 `'hello world'.replace('world', 'flink')` 返回 `'hello flink'`；
       `'ababab'.replace('abab', 'z')` 返回 `'zab'`。
+  - sql: TRANSLATE(expr, fromStr, toStr)
+    table: expr.translate(fromStr, toStr)
+    description: |
+      将 expr 中所有出现在 fromStr 之中的字符替换为 toStr 中的相应字符。
+      如果 toStr 的长度短于 fromStr，则未匹配的字符将被移除。
+      expr [<CHAR> | <VARCHAR>], fromStr [<CHAR> | <VARCHAR>], toStr [<CHAR> | <VARCHAR>]
+      返回 STRING 格式的转换结果。
   - sql: REGEXP_EXTRACT(string1, string2[, integer])
     table: STRING1.regexpExtract(STRING2[, INTEGER1])
     description: |

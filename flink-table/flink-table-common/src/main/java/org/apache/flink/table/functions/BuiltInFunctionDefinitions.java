@@ -970,6 +970,26 @@ public final class BuiltInFunctionDefinitions {
                     .outputTypeStrategy(nullableIfArgs(explicit(DataTypes.STRING())))
                     .build();
 
+    // By default, Calcite parse TRANSLATE as TRANSLATE3, hence it is necessary to modify the
+    // name field to ensure it is called correctly.
+    public static final BuiltInFunctionDefinition TRANSLATE =
+            BuiltInFunctionDefinition.newBuilder()
+                    .name("TRANSLATE3")
+                    .sqlName("TRANSLATE")
+                    .kind(SCALAR)
+                    .inputTypeStrategy(
+                            sequence(
+                                    Arrays.asList("expr", "fromStr", "toStr"),
+                                    Arrays.asList(
+                                            logical(LogicalTypeFamily.CHARACTER_STRING),
+                                            logical(LogicalTypeFamily.CHARACTER_STRING),
+                                            logical(LogicalTypeFamily.CHARACTER_STRING))))
+                    .outputTypeStrategy(
+                            nullableIfArgs(ConstantArgumentCount.to(0), explicit(STRING())))
+                    .runtimeClass(
+                            "org.apache.flink.table.runtime.functions.scalar.TranslateFunction")
+                    .build();
+
     public static final BuiltInFunctionDefinition TRIM =
             BuiltInFunctionDefinition.newBuilder()
                     .name("trim")
@@ -1257,6 +1277,25 @@ public final class BuiltInFunctionDefinitions {
                                             logical(LogicalTypeFamily.CHARACTER_STRING),
                                             logical(LogicalTypeFamily.CHARACTER_STRING))))
                     .outputTypeStrategy(nullableIfArgs(varyingString(argument(0))))
+                    .build();
+
+    public static final BuiltInFunctionDefinition BTRIM =
+            BuiltInFunctionDefinition.newBuilder()
+                    .name("BTRIM")
+                    .kind(SCALAR)
+                    .inputTypeStrategy(
+                            or(
+                                    sequence(
+                                            Arrays.asList("str"),
+                                            Arrays.asList(
+                                                    logical(LogicalTypeFamily.CHARACTER_STRING))),
+                                    sequence(
+                                            Arrays.asList("str", "trimStr"),
+                                            Arrays.asList(
+                                                    logical(LogicalTypeFamily.CHARACTER_STRING),
+                                                    logical(LogicalTypeFamily.CHARACTER_STRING)))))
+                    .outputTypeStrategy(nullableIfArgs(explicit(DataTypes.STRING())))
+                    .runtimeClass("org.apache.flink.table.runtime.functions.scalar.BTrimFunction")
                     .build();
 
     public static final BuiltInFunctionDefinition REPEAT =

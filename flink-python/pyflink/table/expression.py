@@ -1084,6 +1084,13 @@ class Expression(Generic[T]):
         """
         return _ternary_op("replace")(self, search, replacement)
 
+    def translate(self, from_str, to_str) -> 'Expression':
+        """
+        Translate an expr where all characters in from_str have been replaced with those in to_str.
+        If to_str has a shorter length than from_str, unmatched characters are removed.
+        """
+        return _ternary_op("translate")(self, from_str, to_str)
+
     @property
     def char_length(self) -> 'Expression[int]':
         """
@@ -1314,6 +1321,16 @@ class Expression(Generic[T]):
         Returns a string that removes the right whitespaces from the given string.
         """
         return _unary_op("rtrim")(self)
+
+    def btrim(self, trim_str=None) -> 'Expression':
+        """
+        Removes any leading and trailing characters within trim_str from str.
+        trim_str is set to whitespace by default.
+        """
+        if trim_str is None:
+            return _unary_op("btrim")(self)
+        else:
+            return _binary_op("btrim")(self, trim_str)
 
     def repeat(self, n: Union[int, 'Expression[int]']) -> 'Expression[str]':
         """
